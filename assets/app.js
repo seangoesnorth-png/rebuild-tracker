@@ -31,7 +31,7 @@ const COPY = {
     "The goal isn't perfection. The goal is consistency. How'd you do?",
     "Day by day. Not decade by decade. What happened today?",
     "What are you rebuilding? Did today serve that?",
-    "Two years. Nine months. One day at a time. What's your count?",
+    "One day at a time. What's your count today?",
     "Close your eyes. Is tomorrow's you proud of today?"
   ]
 };
@@ -211,10 +211,11 @@ function makeShareCard(){
   x.textAlign="center";
   x.fillStyle="#8B96A8";x.font="500 28px 'JetBrains Mono',monospace";
   x.fillText("CURRENT STREAK",540,360);
+  const sc=currentStreak();
   x.fillStyle="#E8C547";x.font="700 320px 'JetBrains Mono',monospace";
-  x.fillText(String(currentStreak()),540,640);
+  x.fillText(String(sc),540,640);
   x.fillStyle="#EFE7D4";x.font="500 34px 'JetBrains Mono',monospace";
-  x.fillText("DAYS · "+rangeRate(30)+"% LAST 30",540,720);
+  x.fillText((sc===1?"DAY":"DAYS")+" · "+rangeRate(30)+"% LAST 30",540,720);
   x.fillStyle="#EFE7D4";x.font="800 40px 'Inter',sans-serif";
   x.fillText(COPY.shareTagline,540,940);
   x.fillStyle="#8B96A8";x.font="500 26px 'JetBrains Mono',monospace";
@@ -227,6 +228,7 @@ function makeShareCard(){
 
 /* ---- SETUP / EDITOR ---- */
 function renderSetup(){
+  const sdi=document.getElementById("startDateInput"); if(sdi) sdi.value=state.startDate;
   const list=document.getElementById("setupList"); list.innerHTML="";
   state.habits.forEach(h=>{
     const row=document.createElement("div");row.className="setup-row";
@@ -279,6 +281,25 @@ function exportData(){
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 
+/* ---- IMPORT / RESTORE (free + pro: restoring your own data is never paywalled) ---- */
+function importData(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    let data;
+    try{ data=JSON.parse(e.target.result); }
+    catch(err){ confirmBox("Couldn't read that","That file isn't valid JSON. Use your rebuild-tracker-backup.json.",null,true); return; }
+    if(!data||typeof data!=="object"||!Array.isArray(data.habits)||!data.log||typeof data.log!=="object"){
+      confirmBox("Couldn't read that","That doesn't look like a Rebuild Tracker backup.",null,true); return;
+    }
+    confirmBox("Restore this backup?","This replaces your current habits and history with the backup. Can't be undone.",()=>{
+      state={ habits:data.habits, log:data.log, bestStreak:data.bestStreak||0, startDate:data.startDate||todayKey() };
+      recalcBest(); save(); switchView("today");
+      confirmBox("Restored","Your backup is loaded. Welcome back.",null,true);
+    });
+  };
+  reader.readAsText(file);
+}
+
 /* ---- NAV ---- */
 function switchView(v){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===v));
@@ -300,6 +321,9 @@ function init(){
   document.getElementById("calNext").addEventListener("click",()=>{calMonth.setMonth(calMonth.getMonth()+1);renderCalendar();document.getElementById("calDetail").hidden=true;});
   document.getElementById("shareBtn").addEventListener("click",makeShareCard);
   document.getElementById("exportBtn").addEventListener("click",exportData);
+  document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+  document.getElementById("importFile").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(f)importData(f);e.target.value="";});
+  (function(){const sdi=document.getElementById("startDateInput");if(sdi)sdi.addEventListener("change",()=>{if(sdi.value){state.startDate=sdi.value;save();renderToday();}});})();
   document.getElementById("resetBtn").addEventListener("click",()=>confirmBox("Start over?",COPY.resetWarning,()=>{state={habits:DEFAULTS.slice(),log:{},bestStreak:0,startDate:todayKey()};save();switchView("today");}));
   document.getElementById("pillarPick").addEventListener("click",e=>{const b=e.target.closest(".pp");if(b){editPillar=b.dataset.pillar;setPillarSel();}});
   document.getElementById("editorSave").addEventListener("click",saveEditor);

@@ -114,9 +114,16 @@
     <div class="setup-head">YOUR HABITS</div>
     <div id="setupList" class="setup-list"></div>
     <button class="add-row-btn" id="addRow">+ ADD HABIT</button>
+    <div class="startdate-block">
+      <div class="sd-head">REBUILD START DATE</div>
+      <input type="date" id="startDateInput" class="sd-input">
+      <div class="sd-hint">Your "DAY OF THE REBUILD" counts from here. Sober date, quit day, today — your call.</div>
+    </div>
     <div class="danger-zone">
       <button class="export-btn locked" id="exportBtn">🔒 EXPORT / BACKUP — PRO</button>
+      <button class="export-btn" id="importBtn">IMPORT / RESTORE</button>
       <button class="reset-btn" id="resetBtn">START OVER</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
     </div>
     <div class="foot-credit">THE REBUILD UNIVERSE · @SEANGOESNORTH</div>
   </section>

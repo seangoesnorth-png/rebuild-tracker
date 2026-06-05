@@ -175,6 +175,11 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .sr-btn:active{color:var(--cream);}
 .add-row-btn{width:100%;margin-top:14px;background:none;border:1px dashed var(--cream-mute);color:var(--cream-dim);
   font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;padding:14px;border-radius:12px;cursor:pointer;}
+.startdate-block{margin-top:26px;background:var(--navy-light);border:1px solid var(--grid-line);border-radius:12px;padding:16px;}
+.sd-head{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--cream-dim);margin-bottom:10px;}
+.sd-input{width:100%;background:var(--navy);border:1px solid var(--grid-line);color:var(--cream);font-family:var(--font-mono);font-size:14px;padding:12px 14px;border-radius:10px;outline:none;color-scheme:dark;}
+.sd-input:focus{border-color:var(--cream-mute);}
+.sd-hint{font-family:var(--font-mono);font-size:10px;color:var(--cream-mute);margin-top:8px;line-height:1.5;}
 .danger-zone{margin-top:40px;display:flex;flex-direction:column;gap:10px;}
 .export-btn,.reset-btn{width:100%;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;
   padding:14px;border-radius:12px;cursor:pointer;}
