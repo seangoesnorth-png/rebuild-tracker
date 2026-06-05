@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#060B17">
+<title>The Rebuild Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<div id="app">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand-mark">
+      <span class="brand-tick">┌</span>
+      <span class="brand-name">THE REBUILD TRACKER</span>
+      <span class="brand-tick">┐</span>
+    </div>
+    <div class="brand-tagline">Day by day. Just a little.</div>
+  </header>
+
+  <!-- Nav -->
+  <nav class="tabbar" id="tabbar">
+    <button class="tab active" data-view="today">TODAY</button>
+    <button class="tab" data-view="calendar">THE LAST 30</button>
+    <button class="tab" data-view="stats">THE COUNT</button>
+    <button class="tab" data-view="settings">⚙</button>
+  </nav>
+
+  <!-- TODAY VIEW -->
+  <section class="view active" id="view-today">
+    <div class="today-head">
+      <div class="today-date" id="todayDate">—</div>
+      <div class="streak-banner">
+        <span class="streak-num" id="dayCount">0</span>
+        <span class="streak-cap">DAY OF THE REBUILD</span>
+      </div>
+    </div>
+    <div id="habitList" class="habit-list"></div>
+    <div id="todayEmpty" class="empty-state" hidden>
+      Nothing tracked yet. Add your first habit below.
+    </div>
+    <button class="add-habit-btn" id="openSetup">+ ADD / EDIT HABITS</button>
+    <div id="doneState" class="done-state" hidden>
+      <div class="done-msg" id="doneMsg">Another one. Day by day.</div>
+      <div class="reflect" id="reflectPrompt"></div>
+    </div>
+  </section>
+
+  <!-- CALENDAR VIEW -->
+  <section class="view" id="view-calendar">
+    <div class="cal-head">
+      <button class="cal-nav" id="calPrev">‹</button>
+      <div class="cal-title" id="calTitle">—</div>
+      <button class="cal-nav" id="calNext">›</button>
+    </div>
+    <div class="cal-dow">
+      <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend">
+      <span class="lg"><i class="sw sw0"></i> none</span>
+      <span class="lg"><i class="sw sw1"></i> partial</span>
+      <span class="lg"><i class="sw sw2"></i> most</span>
+      <span class="lg"><i class="sw sw3"></i> all</span>
+    </div>
+    <div class="cal-detail" id="calDetail" hidden></div>
+  </section>
+
+  <!-- STATS VIEW -->
+  <section class="view" id="view-stats">
+    <div class="stats-head">
+      <div class="stats-title">THE COUNT</div>
+      <div class="stats-sub">Measured against no one but yourself.</div>
+    </div>
+    <div class="big-counters">
+      <div class="bc">
+        <div class="bc-num" id="curStreak">0</div>
+        <div class="bc-cap">current streak</div>
+      </div>
+      <div class="bc">
+        <div class="bc-num" id="bestStreak">0</div>
+        <div class="bc-cap">best streak</div>
+      </div>
+    </div>
+    <div class="rate-row">
+      <div class="rate">
+        <div class="rate-num" id="rate7">0%</div>
+        <div class="rate-cap">last 7 days</div>
+      </div>
+      <div class="rate">
+        <div class="rate-num" id="rate30">0%</div>
+        <div class="rate-cap">last 30 days</div>
+      </div>
+    </div>
+    <div class="pillar-bars" id="pillarBars"></div>
+    <div class="best-worst" id="bestWorst"></div>
+    <button class="share-btn locked" id="shareBtn">🔒 SHARE CARD — PRO</button>
+    <a class="upgrade-link" id="upgradeShare" href="https://seangoesnorth.gumroad.com/l/rebuild-tracker" target="_blank" rel="noopener">Unlock the share card → get Pro for $9</a>
+  </section>
+
+  <!-- SETTINGS / SETUP VIEW -->
+  <section class="view" id="view-settings">
+    <a class="pro-banner" href="https://seangoesnorth.gumroad.com/l/rebuild-tracker" target="_blank" rel="noopener">
+      <div class="pro-banner-top">REBUILD TRACKER · PRO</div>
+      <div class="pro-banner-mid">7 habits · share card · data backup</div>
+      <div class="pro-banner-cta">Unlock everything — $9, no subscription →</div>
+    </a>
+    <div class="setup-head">YOUR HABITS</div>
+    <div id="setupList" class="setup-list"></div>
+    <button class="add-row-btn" id="addRow">+ ADD HABIT</button>
+    <div class="danger-zone">
+      <button class="export-btn locked" id="exportBtn">🔒 EXPORT / BACKUP — PRO</button>
+      <button class="reset-btn" id="resetBtn">START OVER</button>
+    </div>
+    <div class="foot-credit">THE REBUILD UNIVERSE · @SEANGOESNORTH</div>
+  </section>
+</div>
+
+<!-- Habit editor modal -->
+<div class="modal-wrap" id="editorModal" hidden>
+  <div class="modal">
+    <div class="modal-title" id="editorTitle">ADD HABIT</div>
+    <input type="text" id="habitName" class="inp" placeholder="Habit name" maxlength="40">
+    <div class="pillar-pick" id="pillarPick">
+      <button class="pp body" data-pillar="BODY">BODY</button>
+      <button class="pp mind" data-pillar="MIND">MIND</button>
+      <button class="pp craft" data-pillar="CRAFT">CRAFT</button>
+    </div>
+    <input type="text" id="habitEmoji" class="inp" placeholder="Emoji (optional)" maxlength="4">
+    <div class="modal-actions">
+      <button class="m-cancel" id="editorCancel">CANCEL</button>
+      <button class="m-save" id="editorSave">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm modal -->
+<div class="modal-wrap" id="confirmModal" hidden>
+  <div class="modal">
+    <div class="modal-title" id="confirmTitle">Sure?</div>
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div class="modal-actions">
+      <button class="m-cancel" id="confirmNo">CANCEL</button>
+      <button class="m-save danger" id="confirmYes">CONFIRM</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="shareCanvas" width="1080" height="1080" hidden></canvas>
+
+<script src="assets/app.js"></script>
+</body>
+</html>
