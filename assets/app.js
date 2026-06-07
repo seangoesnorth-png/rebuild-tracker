@@ -4,7 +4,7 @@
 
 const IS_FREE = true;
 const FREE_HABIT_CAP = 5;
-const GUMROAD_URL = "https://seangoesnorth.gumroad.com/l/rebuild-tracker";
+const GUMROAD_URL = "https://northbound03.gumroad.com/l/rebuild-tracker";
 
 const COPY = {
   allDoneToday: "Another one. Day by day.",
